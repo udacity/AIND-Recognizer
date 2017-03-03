@@ -96,7 +96,7 @@ class SelectorDIC(ModelSelector):
 
 
 class SelectorCV(ModelSelector):
-    ''' select best model based on on average log Likelihood of cross-validation folds
+    ''' select best model based on average log Likelihood of cross-validation folds
 
     '''
 
