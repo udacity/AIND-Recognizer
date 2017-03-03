@@ -2,3 +2,4 @@
 *.xml
 *.pyc
 .idea/
+.ipynb_checkpoints/
