@@ -5,6 +5,7 @@ import warnings
 import numpy as np
 from hmmlearn.hmm import GaussianHMM
 from sklearn.model_selection import KFold
+from asl_utils import combine_sequences
 
 
 class ModelSelector(object):
