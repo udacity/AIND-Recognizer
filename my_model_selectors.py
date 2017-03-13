@@ -5,6 +5,7 @@ import warnings
 import numpy as np
 from hmmlearn.hmm import GaussianHMM
 from sklearn.model_selection import KFold
+from asl_utils import combine_sequences
 
 
 class ModelSelector(object):
@@ -12,14 +13,14 @@ class ModelSelector(object):
     base class for model selection (strategy design pattern)
     '''
 
-    def __init__(self, words: dict, hwords: dict, this_word: str,
+    def __init__(self, all_word_sequences: dict, all_word_Xlengths: dict, this_word: str,
                  n_constant=3,
                  min_n_components=2, max_n_components=10,
-                 random_state=None, verbose=False):
-        self.words = words
-        self.hwords = hwords
-        self.sequences = words[this_word]
-        self.X, self.lengths = hwords[this_word]
+                 random_state=14, verbose=False):
+        self.words = all_word_sequences
+        self.hwords = all_word_Xlengths
+        self.sequences = all_word_sequences[this_word]
+        self.X, self.lengths = all_word_Xlengths[this_word]
         self.this_word = this_word
         self.n_constant = n_constant
         self.min_n_components = min_n_components

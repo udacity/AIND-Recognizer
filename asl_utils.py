@@ -58,6 +58,23 @@ def train_all_words(training: WordsData, model_selector):
         model_dict[word] = model
     return model_dict
 
+
+def combine_sequences(split_index_list, sequences):
+    '''
+    concatenate sequences referenced in an index list and returns tuple of the new X,lengths
+
+    useful when recombining sequences split using KFold for hmmlearn
+
+    :param split_index_list: a list of indices as created by KFold splitting
+    :param sequences: list of feature sequences
+    :return: tuple of list, list in format of X,lengths use in hmmlearn
+    '''
+    sequences_fold = [sequences[idx] for idx in split_index_list]
+    X = [item for sublist in sequences_fold for item in sublist]
+    lengths = [len(sublist) for sublist in sequences_fold]
+    return X, lengths
+
+
 def putHTML(color, msg):
     source = """<font color={}>{}</font><br/>""".format(color, msg)
     return HTML(source)
