@@ -22,7 +22,7 @@ A template notebook is provided as `asl_recognizer.ipynb`. The notebook is a com
 
 ### Run
 
-In a terminal or command window, navigate to the top-level project directory `asl_recognizer/` (that contains this README) and run one of the following command:
+In a terminal or command window, navigate to the top-level project directory `AIND_recognizer/` (that contains this README) and run one of the following command:
 
 `jupyter notebook asl_recognizer.ipynb`
 
