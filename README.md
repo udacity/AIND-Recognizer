@@ -53,7 +53,4 @@ in the form of start and end frames (inclusive).
 
 The videos in the corpus include recordings from three different ASL speakers.
 The mappings for the three speakers to video are included in the `speaker.csv` 
-file.  In addition, min and max hand location statistics have been gathered and are
-provided in the `speakerstats.csv` file.  This may be helpful in standardizing the 
-hand position values since taller speakers have a wider range of motion.
-
+file.
