@@ -97,12 +97,38 @@ class SelectorDIC(ModelSelector):
 
 
 class SelectorCV(ModelSelector):
-    ''' select best model based on average log Likelihood of cross-validation folds
-
-    '''
-
+    ''' select best model based on average log Likelihood of cross-validation folds'''
     def select(self):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-        # TODO implement model selection using CV
-        raise NotImplementedError
+        # Break Data Sets into Folds
+        word_sequences = self.sequences  # get sequences to split them in folds
+        len_word_sequences = len(word_sequences)
+        # Make Sure Data Can be Safely Broken
+        if len_word_sequences < 3:
+            split_method = KFold(n_splits=len_word_sequences)
+        else:
+            split_method = KFold()
+        # Model Selection
+        model = None
+        model_list = []
+        for n_components in range(2, 10):
+            log_list = []
+            try:
+                for cv_train_idx, cv_test_idx in split_method.split(word_sequences):
+                    # Train
+                    X, lengths = combine_sequences(cv_train_idx, word_sequences)
+                    model = GaussianHMM(n_components=n_components,
+                                        covariance_type="diag",
+                                        n_iter=1000,
+                                        random_state=self.random_state,
+                                        verbose=False).fit(X, lengths)
+                    # Test
+                    X, lengths = combine_sequences(cv_test_idx, word_sequences)
+                    logL = model.score(X, lengths)
+                    log_list.append(logL)
+            except Exception as e:  # TODO: Find out Why Sometimes Exceptions Occur
+                continue
+            mean = np.mean(log_list)
+            model_list.append([mean, model])
+        model_sorted = sorted(model_list, key=lambda m: m[0])
+        return model_sorted[-1][1] # Logs are Negative, to Maximize Choose the Last (Should Probably Just Add Parameters to the Sort Function)
