@@ -31,7 +31,7 @@ In a terminal or command window, navigate to the top-level project directory `AI
 
 `jupyter notebook asl_recognizer.ipynb`
 
-This will open the Jupyter Notebook software and notebook in your browser. Follow the instructions in the notebook for completing the project.
+This will open the Jupyter Notebook software and notebook in your browser which is where you will directly edit and run your code. Follow the instructions in the notebook for completing the project.
 
 
 ### Additional Information
