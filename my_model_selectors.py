@@ -105,4 +105,37 @@ class SelectorCV(ModelSelector):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
         # TODO implement model selection using CV
-        raise NotImplementedError
+        for n_components in range(self.min_n_components, self.max_n_components+1):
+            split_method = KFold()
+            logL = []  # list of cross validation scores obtained
+            best_score = float('-inf')
+            best_state = 3
+            n_splits = 3
+            # get the model for the combined cross-validation training sequences and score with their combined
+            #  validation sequences filling the list 'logL'
+            
+            
+            if(len(self.sequences)<n_splits):
+                break
+            
+            
+
+            for cv_train_idx, cv_test_idx in split_method.split(self.sequences):
+
+                X_train, Lengths_train = combine_sequences(cv_train_idx, self.sequences)
+                X_test,  Lengths_test  = combine_sequences(cv_test_idx,self.sequences)
+
+                model = GaussianHMM(n_components).fit(X_train,Lengths_train)
+                # model = self.base_model(n_components).fit(X_train,Lengths_train)
+                
+                logL.append(model.score(X_test,Lengths_test))
+
+
+
+            score = np.mean(logL)
+            if  score > best_score:
+                best_score = score
+                best_state = n_components
+
+
+        return GaussianHMM(best_state).fit(self.X,self.lengths)
