@@ -77,7 +77,27 @@ class SelectorBIC(ModelSelector):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
         # TODO implement model selection based on BIC scores
-        raise NotImplementedError
+        
+        best_model = None
+        lowest_BIC = float('inf')      # the lower the better
+        for n_components in range(self.min_n_components, self.max_n_components):
+            try:
+                model = GaussianHMM(n_components).fit(self.X, self.lengths)
+
+                
+                logL = model.score(self.X,self.lengths)     # the likelihood of the ﬁtted model
+                P = n_components * n_components +n_components * 2 * len(self.X[0]) - 1      # the number of parameters
+                logN = math.log(len(self.X))     # the number of data points
+
+                BIC = -2 * logL + P * logN
+
+                if lowest_BIC > BIC :
+                    lowest_BIC = BIC
+                    best_model = model
+            except:
+                break
+
+        return best_model
 
 
 class SelectorDIC(ModelSelector):
@@ -93,7 +113,13 @@ class SelectorDIC(ModelSelector):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
         # TODO implement model selection based on DIC scores
-        raise NotImplementedError
+
+        best_model = None
+        best_DIC = float('-inf')
+
+
+
+        return best_model
 
 
 class SelectorCV(ModelSelector):
@@ -109,7 +135,7 @@ class SelectorCV(ModelSelector):
             split_method = KFold()
             logL = []  # list of cross validation scores obtained
             best_score = float('-inf')
-            best_state = 3
+            best_model = None
             n_splits = 3
             # get the model for the combined cross-validation training sequences and score with their combined
             #  validation sequences filling the list 'logL'
@@ -125,8 +151,8 @@ class SelectorCV(ModelSelector):
                     X_train, Lengths_train = combine_sequences(cv_train_idx, self.sequences)
                     X_test,  Lengths_test  = combine_sequences(cv_test_idx,self.sequences)
 
-                    #model = GaussianHMM(n_components).fit(X_train,Lengths_train)
-                    model = self.base_model(n_components).fit(X_train,Lengths_train)
+                    model = GaussianHMM(n_components).fit(X_train,Lengths_train)
+                    
                     
                     logL.append(model.score(X_test,Lengths_test))
 
@@ -134,8 +160,8 @@ class SelectorCV(ModelSelector):
                 score = np.mean(logL)
                 if  score > best_score:
                     best_score = score
-                    best_state = n_components
+                    best_model = model
             except:break
 
 
-        return GaussianHMM(best_state).fit(self.X,self.lengths)
+        return best_model.fit(self.X,self.lengths)
