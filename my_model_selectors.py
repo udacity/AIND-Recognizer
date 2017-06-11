@@ -115,7 +115,7 @@ class SelectorCV(ModelSelector):
             #  validation sequences filling the list 'logL'
             
             
-            if(len(self.sequences)<n_splits):
+            if(len(self.sequences)<n_splits):       # if samples of a word less than components, skip
                 break
             
             
@@ -129,7 +129,6 @@ class SelectorCV(ModelSelector):
                     model = self.base_model(n_components).fit(X_train,Lengths_train)
                     
                     logL.append(model.score(X_test,Lengths_test))
-
 
 
                 score = np.mean(logL)
