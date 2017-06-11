@@ -125,8 +125,8 @@ class SelectorCV(ModelSelector):
                     X_train, Lengths_train = combine_sequences(cv_train_idx, self.sequences)
                     X_test,  Lengths_test  = combine_sequences(cv_test_idx,self.sequences)
 
-                    model = GaussianHMM(n_components).fit(X_train,Lengths_train)
-                    # model = self.base_model(n_components).fit(X_train,Lengths_train)
+                    #model = GaussianHMM(n_components).fit(X_train,Lengths_train)
+                    model = self.base_model(n_components).fit(X_train,Lengths_train)
                     
                     logL.append(model.score(X_test,Lengths_test))
 
