@@ -114,12 +114,42 @@ class SelectorDIC(ModelSelector):
 
         # TODO implement model selection based on DIC scores
 
-        best_model = None
+        best_component = 3
         best_DIC = float('-inf')
 
 
+        for n_components in range(self.min_n_components, self.max_n_components):
 
-        return best_model
+            model = GaussianHMM(n_components)
+
+
+            try:
+
+                logL_thisWord = math.log(model.score(self.X, self.lengths))
+                logL_otherWords = 0     
+                M = 0       # M in the equation
+
+                for otherWord in self.words:      # the sum of other words' logl
+                    if otherWord == self.this_word:       # skip this word
+                        continue
+                    x_otherWords, lengths_otherWords = self.hwords[otherWord]
+                    logL_otherWords += math.log(model.score(x_otherWords, lengths_otherWords))
+                    M += 1         # counting
+
+
+                DIC = logL_thisWord - logL_otherWords / M
+
+                if best_DIC < DIC:          # the higher the better
+                    best_DIC = DIC
+                    best_component = n_components
+
+            except:
+                break
+
+
+            
+
+        return GaussianHMM(best_component)
 
 
 class SelectorCV(ModelSelector):
@@ -135,7 +165,7 @@ class SelectorCV(ModelSelector):
             split_method = KFold()
             logL = []  # list of cross validation scores obtained
             best_score = float('-inf')
-            best_model = None
+            best_components = 3
             n_splits = 3
             # get the model for the combined cross-validation training sequences and score with their combined
             #  validation sequences filling the list 'logL'
@@ -160,8 +190,8 @@ class SelectorCV(ModelSelector):
                 score = np.mean(logL)
                 if  score > best_score:
                     best_score = score
-                    best_model = model
+                    best_components = n_components
             except:break
 
 
-        return best_model.fit(self.X,self.lengths)
+        return GaussianHMM(best_components).fit(self.X,self.lengths)
