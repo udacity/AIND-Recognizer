@@ -17,10 +17,6 @@ class TestRecognize(TestCase):
     def test_recognize_probabilities_interface(self):
         probs, _ = recognize(self.models, self.test_set)
         self.assertEqual(len(probs), self.test_set.num_items, "Number of test items in probabilities list incorrect.")
-        self.assertEqual(len(probs[0]), self.training_set.num_items,
-                         "Number of training word probabilities in test item dictionary incorrect.")
-        self.assertEqual(len(probs[-1]), self.training_set.num_items,
-                         "Number of training word probabilities in test item dictionary incorrect.")
         self.assertIn('FRANK', probs[0], "Dictionary of probabilities does not contain correct keys")
         self.assertIn('CHICKEN', probs[-1], "Dictionary of probabilities does not contain correct keys")
 
