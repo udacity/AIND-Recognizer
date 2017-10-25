@@ -100,12 +100,12 @@ class WordsData(object):
         tr_df = pd.read_csv(fn)
         dict = {}
         for i in range(len(tr_df)):
-            word = tr_df.ix[i,'word']
-            video = tr_df.ix[i,'video']
+            word = tr_df.loc[i,'word']
+            video = tr_df.loc[i,'video']
             new_sequence = [] # list of sample lists for a sequence
-            for frame in range(tr_df.ix[i,'startframe'], tr_df.ix[i,'endframe']+1):
+            for frame in range(tr_df.loc[i,'startframe'], tr_df.loc[i,'endframe']+1):
                 vid_frame = video, frame
-                sample = [asl.df.ix[vid_frame][f] for f in feature_list]
+                sample = [asl.df.loc[vid_frame][f] for f in feature_list]
                 if len(sample) > 0:  # dont add if not found
                     new_sequence.append(sample)
             if word in dict:
@@ -193,11 +193,11 @@ class SinglesData(object):
         dict = {}
         # for each word indexed in the DataFrame
         for i in range(len(self.df)):
-            video = self.df.ix[i,'video']
+            video = self.df.loc[i,'video']
             new_sequence = [] # list of sample dictionaries for a sequence
-            for frame in range(self.df.ix[i,'startframe'], self.df.ix[i,'endframe']+1):
+            for frame in range(self.df.loc[i,'startframe'], self.df.loc[i,'endframe']+1):
                 vid_frame = video, frame
-                sample = [asl.df.ix[vid_frame][f] for f in feature_list]
+                sample = [asl.df.loc[vid_frame][f] for f in feature_list]
                 if len(sample) > 0:  # dont add if not found
                     new_sequence.append(sample)
             if i in dict:
@@ -292,6 +292,6 @@ def create_hmmlearn_data(dict):
 
 if __name__ == '__main__':
     asl= AslDb()
-    print(asl.df.ix[98, 1])
+    print(asl.df.loc[98, 1])
 
 
