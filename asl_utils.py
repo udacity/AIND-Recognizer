@@ -90,7 +90,7 @@ def feedback(passed, failmsg='', passmsg='Correct!'):
 def test_features_tryit(asl):
     print('asl.df sample')
     display(asl.df.head())
-    sample = asl.df.ix[98, 1][GROUND_FEATURES].tolist()
+    sample = asl.df.loc[98, 1][GROUND_FEATURES].tolist()
     correct = [9, 113, -12, 119]
     failmsg = 'The values returned were not correct.  Expected: {} Found: {}'.format(correct, sample)
     return feedback(sample == correct, failmsg)
@@ -99,7 +99,7 @@ def test_features_tryit(asl):
 def test_std_tryit(df_std):
     print('df_std')
     display(df_std)
-    sample = df_std.ix['man-1'][RAW_FEATURES]
+    sample = df_std.loc['man-1'][RAW_FEATURES]
     correct = [15.154425, 36.328485, 18.901917, 54.902340]
     failmsg = 'The raw man-1 values returned were not correct.\nExpected: {} for {}'.format(correct, RAW_FEATURES)
     return feedback(np.allclose(sample, correct, .001), failmsg)
